@@ -1,0 +1,307 @@
+---
+interface NavItem {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  lang: 'es' | 'en';
+  homeHref: string;
+  switchHref: string;
+  switchLabel: string;
+  nav: NavItem[];
+  available: string;
+  menuLabel: string;
+  closeLabel: string;
+}
+
+const { lang, homeHref, switchHref, switchLabel, nav, available, menuLabel, closeLabel } =
+  Astro.props;
+---
+
+<header class="hdr" data-hdr>
+  <div class="hdr__inner">
+    <a class="hdr__brand" href={homeHref} aria-label="Joaquín Pereira">
+      <span class="hdr__mark" aria-hidden="true">JP</span>
+      <span class="hdr__name">Joaquín&nbsp;Pereira</span>
+    </a>
+
+    <nav class="hdr__nav" aria-label="Principal">
+      {nav.map((item) => (
+        <a class="hdr__link mono" href={item.href}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hdr__side">
+      <span class="hdr__avail mono">
+        <i aria-hidden="true"></i>
+        <span class="hdr__avail-text">{available}</span>
+      </span>
+      <a class="hdr__lang mono" href={switchHref} hreflang={lang === 'es' ? 'en' : 'es'}>
+        {switchLabel}
+      </a>
+      <button
+        class="hdr__toggle"
+        type="button"
+        aria-label={menuLabel}
+        aria-expanded="false"
+        data-menu-toggle
+        data-label-open={menuLabel}
+        data-label-close={closeLabel}
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="hdr__panel" data-menu-panel hidden>
+    <nav class="hdr__panel-nav" aria-label="Menú">
+      {nav.map((item, i) => (
+        <a class="hdr__panel-link" href={item.href}>
+          <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+          <span>{item.label}</span>
+        </a>
+      ))}
+    </nav>
+    <div class="hdr__panel-foot">
+      <span class="hdr__avail mono"><i aria-hidden="true"></i>{available}</span>
+      <a class="hdr__lang mono" href={switchHref}>{switchLabel}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    border-bottom: 1px solid transparent;
+    transition:
+      background 0.4s var(--ease),
+      border-color 0.4s var(--ease),
+      backdrop-filter 0.4s var(--ease);
+  }
+
+  .hdr.is-stuck {
+    background: rgba(7, 17, 29, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom-color: var(--line);
+  }
+
+  .hdr__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 62px;
+    max-width: 1520px;
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+  }
+
+  .hdr__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+  }
+
+  .hdr__mark {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--bone);
+    transition:
+      background 0.35s var(--ease),
+      color 0.35s var(--ease);
+  }
+
+  .hdr__brand:hover .hdr__mark {
+    background: var(--bone);
+    color: var(--navy-900);
+  }
+
+  .hdr__name {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hdr__nav {
+    display: none;
+    gap: 2rem;
+    margin-inline: auto;
+  }
+
+  .hdr__link {
+    color: var(--gray);
+    transition: color 0.3s var(--ease);
+  }
+
+  .hdr__link:hover {
+    color: var(--bone);
+  }
+
+  .hdr__side {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .hdr__avail {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+  }
+
+  .hdr__avail i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--steel);
+    box-shadow: 0 0 0 3px rgba(134, 166, 198, 0.16);
+  }
+
+  .hdr__lang {
+    color: var(--bone);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+    transition: border-color 0.3s var(--ease);
+  }
+
+  .hdr__lang:hover {
+    border-color: var(--bone);
+  }
+
+  .hdr__toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .hdr__toggle span {
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: var(--bone);
+    transition: transform 0.35s var(--ease), opacity 0.35s var(--ease);
+  }
+
+  .hdr__toggle[aria-expanded='true'] span:first-child {
+    transform: translateY(3px) rotate(45deg);
+  }
+
+  .hdr__toggle[aria-expanded='true'] span:last-child {
+    transform: translateY(-3px) rotate(-45deg);
+  }
+
+  .hdr__panel {
+    border-top: 1px solid var(--line);
+    background: rgba(7, 17, 29, 0.97);
+    backdrop-filter: blur(14px);
+    padding: 1.5rem var(--gutter) 2rem;
+  }
+
+  .hdr__panel[hidden] {
+    display: none;
+  }
+
+  .hdr__panel-nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hdr__panel-link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line-2);
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hdr__panel-link .mono {
+    color: var(--gray-2);
+  }
+
+  .hdr__panel-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+  }
+
+  .hdr__panel-foot .hdr__avail {
+    display: inline-flex;
+  }
+
+  @media (min-width: 900px) {
+    .hdr__nav {
+      display: flex;
+    }
+
+    .hdr__avail {
+      display: inline-flex;
+    }
+
+    .hdr__toggle {
+      display: none;
+    }
+
+    .hdr__panel {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-hdr]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+
+  const onScroll = () => {
+    if (!header) return;
+    header.classList.toggle('is-stuck', window.scrollY > 24);
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if (toggle && panel) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      toggle.setAttribute(
+        'aria-label',
+        open ? toggle.dataset.labelOpen || '' : toggle.dataset.labelClose || ''
+      );
+      panel.hidden = open;
+      document.body.style.overflow = open ? '' : 'hidden';
+    });
+
+    panel.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        panel.hidden = true;
+        document.body.style.overflow = '';
+      });
+    });
+  }
+</script>

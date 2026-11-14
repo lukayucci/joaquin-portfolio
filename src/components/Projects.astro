@@ -1,0 +1,706 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  index: string;
+  label: string;
+  casesLabel: string;
+  lead: string;
+  indexTitle: string;
+  projects: Project[];
+}
+
+const { lang, index, label, casesLabel, lead, indexTitle, projects } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="work section" id="proyectos">
+  <div class="frame">
+    <header class="section__head" data-reveal>
+      <span class="mono section__index">({index})</span>
+      <span class="mono">{label}</span>
+      <span class="mono work__meta">{projects.length} {casesLabel}</span>
+    </header>
+
+    <p class="work__lead serif" data-reveal>{lead}</p>
+
+    <div class="work__index" data-reveal style="--reveal-delay:80ms">
+      <p class="mono work__index-title">{indexTitle}</p>
+      <ul class="work__index-list" data-index-list>
+        {
+          projects.map((project, i) => (
+            <li class="work__index-item" data-index-item data-preview={project.slug}>
+              <a class="work__index-link" href={`#${project.slug}`}>
+                <span class="work__index-thumb" aria-hidden="true">
+                  <Image
+                    src={project.cover.src}
+                    alt=""
+                    widths={[160, 320]}
+                    sizes="88px"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+                <span class="mono work__index-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="work__index-name serif">{project.title}</span>
+                <span class="work__index-sub">{project.subtitle[lang]}</span>
+                <span class="mono work__index-year">{project.year}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="work__preview" data-preview-stage aria-hidden="true">
+        {
+          projects.map((project) => (
+            <div class="work__preview-item" data-preview-item={project.slug}>
+              <Image
+                src={project.cover.src}
+                alt=""
+                widths={[320, 640]}
+                sizes="320px"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="work__cases">
+      {
+        projects.map((project, i) => (
+          <article class="case" id={project.slug} data-reveal>
+            <header class="case__bar">
+              <span class="mono case__num">({String(i + 1).padStart(2, '0')})</span>
+              <h3 class="case__title serif">{project.title}</h3>
+              <span class="mono case__sub">{project.subtitle[lang]}</span>
+            </header>
+
+            <figure class="case__cover">
+              <div class="case__frame">
+                <Image
+                  src={project.cover.src}
+                  alt={project.cover.alt[lang]}
+                  widths={[640, 1000, 1440, 1920]}
+                  sizes="(min-width: 1100px) 1180px, 100vw"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </div>
+              <figcaption class="mono case__caption">
+                <span>{project.title}</span>
+                <span>{project.cover.alt[lang]}</span>
+              </figcaption>
+            </figure>
+
+            <div class="case__grid">
+              <div class="case__col">
+                <p class="mono case__k">{t('work.context')}</p>
+                <p class="case__p">{project.context[lang]}</p>
+
+                <p class="mono case__k case__k--gap">{t('work.built')}</p>
+                <ul class="case__list">
+                  {project.highlights[lang].map((point) => (
+                    <li class="case__point">
+                      <span aria-hidden="true">—</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <aside class="case__col case__col--side">
+                <dl class="case__meta">
+                  <div class="case__meta-row">
+                    <dt class="mono">{t('work.role')}</dt>
+                    <dd>{project.role[lang]}</dd>
+                  </div>
+                  <div class="case__meta-row">
+                    <dt class="mono">{t('work.year')}</dt>
+                    <dd>{project.year}</dd>
+                  </div>
+                  <div class="case__meta-row">
+                    <dt class="mono">{t('work.status')}</dt>
+                    <dd>
+                      <span class={`case__status case__status--${project.status}`}>
+                        {project.status === 'production'
+                          ? t('work.statusProduction')
+                          : t('work.statusPublic')}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+
+                <div class="case__stack">
+                  <p class="mono case__k">{t('work.stack')}</p>
+                  <ul class="case__chips">
+                    {project.stack.map((tech) => (
+                      <li class="mono case__chip">{tech}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <p class="case__result serif">{project.result[lang]}</p>
+
+                <div class="case__links">
+                  {project.demoUrl && (
+                    <a class="case__link case__link--primary" href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                      <span>{t('work.demo')}</span>
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                  {project.repoUrl && (
+                    <a class="case__link" href={project.repoUrl} target="_blank" rel="noopener noreferrer">
+                      <span>{t('work.repo')}</span>
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </div>
+              </aside>
+            </div>
+
+            <div class="case__gallery">
+              {project.gallery.map((shot) => (
+                <figure class="case__shot">
+                  <div class="case__frame">
+                    <Image
+                      src={shot.src}
+                      alt={shot.alt[lang]}
+                      widths={[480, 800, 1100]}
+                      sizes="(min-width: 1100px) 560px, 100vw"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </figure>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .work__meta {
+    color: var(--gray-2);
+  }
+
+  .work__lead {
+    max-width: 22ch;
+    padding-block: clamp(2rem, 5vw, 3.75rem) clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(1.9rem, 4.4vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+  }
+
+  .work__index {
+    position: relative;
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+
+  .work__index-title {
+    color: var(--gray-2);
+    margin-bottom: 0.4rem;
+  }
+
+  .work__index-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .work__index-link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.5rem 1.25rem;
+    padding: clamp(1rem, 2vw, 1.5rem) 0;
+    border-bottom: 1px solid var(--line-2);
+    transition: color 0.35s var(--ease), padding 0.45s var(--ease);
+  }
+
+  .work__index-item:hover .work__index-link,
+  .work__index-item:focus-within .work__index-link {
+    color: var(--bone);
+  }
+
+  .work__index-num {
+    color: var(--steel);
+  }
+
+  .work__index-name {
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    transition: transform 0.45s var(--ease);
+  }
+
+  .work__index-item:hover .work__index-name {
+    transform: translateX(0.5rem);
+  }
+
+  .work__index-sub {
+    grid-column: 2 / 3;
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .work__index-year {
+    grid-row: 1;
+    grid-column: 3;
+    color: var(--gray-2);
+  }
+
+  .work__index-thumb {
+    display: none;
+  }
+
+  .work__preview {
+    display: none;
+  }
+
+  @media (max-width: 999px) {
+    .work__index-link {
+      grid-template-columns: 84px 1fr auto;
+      align-items: center;
+      gap: 0.3rem 1rem;
+      padding: 1.1rem 0;
+    }
+
+    .work__index-thumb {
+      display: block;
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-self: center;
+      width: 84px;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--navy-850);
+    }
+
+    .work__index-thumb :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.9s var(--ease);
+    }
+
+    .work__index-item:hover .work__index-thumb :global(img) {
+      transform: scale(1.06);
+    }
+
+    .work__index-name {
+      grid-column: 2;
+      grid-row: 1;
+      font-size: clamp(1.35rem, 5.5vw, 1.9rem);
+    }
+
+    .work__index-sub {
+      grid-column: 2;
+      grid-row: 2;
+      font-size: 0.82rem;
+    }
+
+    .work__index-year {
+      grid-column: 3;
+      grid-row: 1;
+    }
+
+    .work__index-num {
+      grid-column: 3;
+      grid-row: 2;
+      justify-self: end;
+      align-self: end;
+    }
+  }
+
+  .work__cases {
+    margin-top: clamp(4rem, 9vw, 8rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(5rem, 11vw, 10rem);
+  }
+
+  .case__bar {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .case__num {
+    color: var(--steel);
+  }
+
+  .case__title {
+    font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    font-weight: 400;
+  }
+
+  .case__sub {
+    margin-left: auto;
+    color: var(--gray-2);
+    text-align: right;
+  }
+
+  .case__cover {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .case__frame {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--navy-850);
+  }
+
+  .case__frame :global(img) {
+    width: 100%;
+    height: auto;
+    transition: transform 0.9s var(--ease);
+  }
+
+  .case__cover:hover .case__frame :global(img) {
+    transform: scale(1.02);
+  }
+
+  .case__caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 0.7rem;
+    color: var(--gray-2);
+  }
+
+  .case__caption span:last-child {
+    text-align: right;
+  }
+
+  .case__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 4rem);
+    margin-top: clamp(2rem, 4vw, 3.25rem);
+  }
+
+  .case__k {
+    color: var(--gray-2);
+    margin-bottom: 0.85rem;
+  }
+
+  .case__k--gap {
+    margin-top: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .case__p {
+    max-width: 60ch;
+    color: var(--gray);
+    font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+    line-height: 1.7;
+  }
+
+  .case__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 64ch;
+  }
+
+  .case__point {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.9rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--line-2);
+    color: var(--bone-2);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .case__point:last-child {
+    border-bottom: 1px solid var(--line-2);
+  }
+
+  .case__point span:first-child {
+    color: var(--steel);
+  }
+
+  .case__meta {
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .case__meta-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line-2);
+  }
+
+  .case__meta-row dt {
+    color: var(--gray-2);
+    flex-shrink: 0;
+  }
+
+  .case__meta-row dd {
+    margin: 0;
+    text-align: right;
+    font-size: 0.9rem;
+    color: var(--bone-2);
+  }
+
+  .case__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .case__status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--steel);
+  }
+
+  .case__status--production::before {
+    background: var(--bone);
+  }
+
+  .case__stack {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .case__chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .case__chip {
+    border: 1px solid var(--line);
+    padding: 0.32rem 0.6rem;
+    color: var(--gray);
+  }
+
+  .case__result {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--steel);
+    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--bone);
+  }
+
+  .case__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .case__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bone-2);
+    transition:
+      background 0.35s var(--ease),
+      color 0.35s var(--ease),
+      border-color 0.35s var(--ease);
+  }
+
+  .case__link span:last-child {
+    color: var(--steel);
+    transition: color 0.35s var(--ease);
+  }
+
+  .case__link:hover {
+    background: var(--bone);
+    color: var(--navy-900);
+    border-color: var(--bone);
+  }
+
+  .case__link:hover span:last-child {
+    color: var(--navy-900);
+  }
+
+  .case__link--primary {
+    background: var(--bone);
+    color: var(--navy-900);
+    border-color: var(--bone);
+  }
+
+  .case__link--primary span:last-child {
+    color: var(--navy-900);
+  }
+
+  .case__link--primary:hover {
+    background: transparent;
+    color: var(--bone);
+    border-color: var(--line);
+  }
+
+  .case__link--primary:hover span:last-child {
+    color: var(--steel);
+  }
+
+  .case__gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  @media (min-width: 820px) {
+    .case__grid {
+      grid-template-columns: 1.55fr 1fr;
+    }
+
+    .case__col--side {
+      position: sticky;
+      top: 90px;
+      align-self: start;
+    }
+
+    .case__gallery {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 1000px) {
+    .work__index-list {
+      position: relative;
+      z-index: 2;
+    }
+
+    .work__preview {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 320px;
+      aspect-ratio: 16 / 10;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.94);
+      transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+    }
+
+    .work__preview.is-active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .work__preview-item {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--navy-850);
+    }
+
+    .work__preview-item.is-active {
+      opacity: 1;
+    }
+
+    .work__preview-item :global(img) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+</style>
+
+<script>
+  const list = document.querySelector<HTMLElement>('[data-index-list]');
+  const stage = document.querySelector<HTMLElement>('[data-preview-stage]');
+
+  if (list && stage) {
+    const fine = window.matchMedia('(pointer: fine)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (fine.matches && !reduce.matches) {
+      const items = list.querySelectorAll<HTMLElement>('[data-index-item]');
+      let tx = 0;
+      let ty = 0;
+      let cx = 0;
+      let cy = 0;
+      let active = false;
+
+      const render = () => {
+        cx += (tx - cx) * 0.16;
+        cy += (ty - cy) * 0.16;
+        stage.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+        requestAnimationFrame(render);
+      };
+
+      const setActive = (slug: string | null) => {
+        stage.classList.toggle('is-active', Boolean(slug));
+        stage.querySelectorAll<HTMLElement>('[data-preview-item]').forEach((el) => {
+          el.classList.toggle('is-active', el.dataset.previewItem === slug);
+        });
+      };
+
+      const onMove = (e: PointerEvent) => {
+        tx = e.clientX;
+        ty = e.clientY;
+      };
+
+      items.forEach((item) => {
+        item.addEventListener('pointerenter', (e) => {
+          const slug = item.dataset.preview;
+          if (slug) setActive(slug);
+          const pe = e as PointerEvent;
+          tx = cx = pe.clientX;
+          ty = cy = pe.clientY;
+          if (!active) {
+            active = true;
+            requestAnimationFrame(render);
+          }
+        });
+        item.addEventListener('pointerleave', () => setActive(null));
+      });
+
+      list.addEventListener('pointermove', onMove, { passive: true });
+      list.addEventListener('pointerleave', () => setActive(null));
+
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (!stage.classList.contains('is-active')) return;
+          setActive(null);
+        },
+        { passive: true }
+      );
+    }
+  }
+</script>

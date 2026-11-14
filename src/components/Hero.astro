@@ -1,0 +1,398 @@
+---
+interface Props {
+  eyebrow: string;
+  location: string;
+  coords: string;
+  role: string;
+  tagline: string;
+  scroll: string;
+  marquee: string[];
+}
+
+const { eyebrow, location, coords, role, tagline, scroll, marquee } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<section class="hero" id="hero" data-hero>
+  <div class="hero__grid" aria-hidden="true"></div>
+  <div class="hero__spot" aria-hidden="true"></div>
+
+  <div class="hero__marks" aria-hidden="true">
+    <span class="hero__mark hero__mark--tl"></span>
+    <span class="hero__mark hero__mark--tr"></span>
+    <span class="hero__mark hero__mark--bl"></span>
+    <span class="hero__mark hero__mark--br"></span>
+  </div>
+
+  <div class="hero__inner">
+    <div class="hero__top">
+      <p class="hero__meta mono">({eyebrow}) — {year}</p>
+      <p class="hero__meta mono hero__meta--right">
+        {location}
+        <span class="hero__meta-sep" aria-hidden="true">/</span>
+        <span class="hero__meta-coords">{coords}</span>
+      </p>
+    </div>
+
+    <h1 class="hero__title serif">
+      <span class="hero__line"><span class="hero__word">Joaquín</span></span>
+      <span class="hero__line"
+        ><span class="hero__word hero__word--accent italic">Pereira</span></span
+      >
+    </h1>
+
+    <div class="hero__foot">
+      <div class="hero__intro">
+        <p class="hero__role">{role}</p>
+        <p class="hero__tagline">{tagline}</p>
+      </div>
+      <div class="hero__cue mono">
+        <span>{scroll}</span>
+        <i aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__marquee" aria-hidden="true">
+    <div class="hero__track" data-marquee>
+      {
+        [0, 1].map(() => (
+          <div class="hero__group">
+            {marquee.map((word) => (
+              <span class="hero__marquee-item mono">
+                {word}
+                <b>·</b>
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 62px;
+    overflow: hidden;
+  }
+
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line-2) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-2) 1px, transparent 1px);
+    background-size: clamp(56px, 8vw, 104px) clamp(56px, 8vw, 104px);
+    -webkit-mask-image: radial-gradient(80% 70% at 62% 40%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(80% 70% at 62% 40%, #000 0%, transparent 78%);
+    opacity: 0.9;
+  }
+
+  .hero__spot {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      340px circle at var(--mx, 70%) var(--my, 40%),
+      rgba(134, 166, 198, 0.16),
+      transparent 60%
+    );
+    transition: background 0.25s linear;
+  }
+
+  .hero__marks {
+    position: absolute;
+    inset: clamp(1rem, 2.5vw, 2rem);
+    pointer-events: none;
+  }
+
+  .hero__mark {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--line);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .hero__mark--tl {
+    top: 0;
+    left: 0;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .hero__mark--tr {
+    top: 0;
+    right: 0;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .hero__mark--bl {
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .hero__mark--br {
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 1520px;
+    width: 100%;
+    margin: 0 auto;
+    padding: clamp(1.75rem, 5vh, 3rem) var(--gutter) clamp(4rem, 9vh, 6rem);
+  }
+
+  .hero__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
+    color: var(--gray);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  }
+
+  .hero.is-ready .hero__top {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.15s;
+  }
+
+  .hero__meta--right {
+    display: none;
+    color: var(--gray-2);
+  }
+
+  .hero__meta-coords {
+    color: var(--gray-2);
+  }
+
+  .hero__meta-sep {
+    margin-inline: 0.4rem;
+  }
+
+  .hero__title {
+    margin: auto 0;
+    font-size: clamp(3.4rem, 15.5vw, 14rem);
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    font-weight: 400;
+  }
+
+  .hero__line {
+    display: block;
+  }
+
+  .hero__line:last-child {
+    padding-left: clamp(0rem, 9vw, 9rem);
+  }
+
+  .hero__word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.36em);
+    filter: blur(8px);
+    transition:
+      opacity 1s var(--ease),
+      transform 1.15s var(--ease),
+      filter 1s var(--ease);
+  }
+
+  .hero.is-ready .hero__word {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .hero.is-ready .hero__line:last-child .hero__word {
+    transition-delay: 0.12s;
+  }
+
+  .hero__word--accent {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--bone-3);
+  }
+
+  .hero__foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+  }
+
+  .hero.is-ready .hero__foot {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.5s;
+  }
+
+  .hero__role {
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+    letter-spacing: -0.01em;
+  }
+
+  .hero__tagline {
+    margin-top: 0.65rem;
+    max-width: 54ch;
+    color: var(--gray);
+    font-size: clamp(0.85rem, 1.1vw, 0.98rem);
+    line-height: 1.6;
+  }
+
+  .hero__cue {
+    display: none;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--gray);
+    white-space: nowrap;
+  }
+
+  .hero__cue i {
+    display: block;
+    width: 1px;
+    height: 46px;
+    background: linear-gradient(var(--bone-3), transparent);
+    animation: cue 2.4s var(--ease-io) infinite;
+    transform-origin: top;
+  }
+
+  @keyframes cue {
+    0%,
+    100% {
+      transform: scaleY(0.35);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  .hero__marquee {
+    position: relative;
+    z-index: 2;
+    background: var(--bone);
+    border-top: 1px solid rgba(7, 17, 29, 0.18);
+    border-bottom: 1px solid rgba(7, 17, 29, 0.18);
+    padding: 0.85rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+
+  .hero__track {
+    display: inline-flex;
+    animation: slide 34s linear infinite;
+  }
+
+  .hero__group {
+    display: inline-flex;
+  }
+
+  .hero__marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.4rem;
+    padding-inline: 1.4rem;
+    color: var(--navy-800);
+  }
+
+  .hero__marquee-item b {
+    color: var(--gray-2);
+    font-weight: 400;
+  }
+
+  @keyframes slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (min-width: 720px) {
+    .hero__meta--right {
+      display: block;
+    }
+
+    .hero__cue {
+      display: flex;
+    }
+  }
+
+  @media (max-width: 719px) {
+    .hero__foot {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__spot {
+      display: none;
+    }
+
+    .hero__track {
+      animation: none;
+    }
+
+    .hero__cue i {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
+  if (hero) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const fine = window.matchMedia('(pointer: fine)');
+
+    const start = () => hero.classList.add('is-ready');
+
+    if (reduce.matches) {
+      start();
+    } else {
+      requestAnimationFrame(() => requestAnimationFrame(start));
+      window.setTimeout(start, 650);
+
+      if (fine.matches) {
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            hero.style.setProperty('--mx', `${(e.clientX / window.innerWidth) * 100}%`);
+            hero.style.setProperty('--my', `${(e.clientY / window.innerHeight) * 100}%`);
+          },
+          { passive: true }
+        );
+      }
+    }
+  }
+</script>

@@ -1,0 +1,184 @@
+---
+interface NavItem {
+  href: string;
+  label: string;
+}
+
+interface Channel {
+  label: string;
+  handle: string;
+  href: string;
+}
+
+interface Props {
+  tagline: string;
+  indexLabel: string;
+  socialLabel: string;
+  topLabel: string;
+  made: string;
+  credit: string;
+  nav: NavItem[];
+  channels: Channel[];
+}
+
+const { tagline, indexLabel, socialLabel, topLabel, made, credit, nav, channels } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="frame">
+    <div class="footer__top">
+      <p class="footer__name serif">Joaquín&nbsp;Pereira</p>
+      <p class="footer__tagline">{tagline}</p>
+    </div>
+
+    <div class="footer__cols">
+      <div class="footer__col">
+        <p class="mono footer__col-title">{indexLabel}</p>
+        <ul class="footer__list">
+          {nav.map((item) => (
+            <li><a class="footer__link" href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <p class="mono footer__col-title">{socialLabel}</p>
+        <ul class="footer__list">
+          {channels.map((channel) => (
+            <li>
+              <a class="footer__link" href={channel.href} target="_blank" rel="noopener noreferrer">
+                {channel.label}
+                <span class="footer__handle mono">{channel.handle}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer__col footer__col--top">
+        <a class="footer__top-link mono" href="#top">
+          <span aria-hidden="true">↑</span>
+          {topLabel}
+        </a>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <span class="mono">{credit}</span>
+      <span class="mono footer__made">{made} · © {year}</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--line);
+    background: var(--navy-850);
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .footer__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .footer__name {
+    font-size: clamp(2rem, 6vw, 3.6rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
+    font-weight: 400;
+  }
+
+  .footer__tagline {
+    max-width: 32ch;
+    color: var(--gray);
+    font-size: 0.95rem;
+  }
+
+  .footer__cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(2rem, 4vw, 3rem);
+  }
+
+  .footer__col-title {
+    color: var(--gray-2);
+    margin-bottom: 1rem;
+  }
+
+  .footer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer__link {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+    color: var(--bone-2);
+    transition: color 0.3s var(--ease);
+  }
+
+  .footer__link:hover {
+    color: var(--bone);
+  }
+
+  .footer__handle {
+    color: var(--gray-2);
+  }
+
+  .footer__col--top {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .footer__top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+
+  .footer__top-link:hover {
+    color: var(--bone);
+    border-color: var(--bone);
+  }
+
+  .footer__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: clamp(1.5rem, 3vw, 2rem);
+    border-top: 1px solid var(--line);
+    color: var(--gray-2);
+  }
+
+  @media (min-width: 760px) {
+    .footer__cols {
+      grid-template-columns: 1fr 1fr auto;
+    }
+
+    .footer__col--top {
+      justify-content: flex-end;
+    }
+  }
+</style>

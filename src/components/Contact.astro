@@ -1,0 +1,252 @@
+---
+interface Channel {
+  label: string;
+  handle: string;
+  href: string;
+}
+
+interface Props {
+  index: string;
+  label: string;
+  statementA: string;
+  statementB: string;
+  body: string;
+  whatsappLabel: string;
+  whatsappHref: string;
+  or: string;
+  response: string;
+  channels: Channel[];
+}
+
+const { index, label, statementA, statementB, body, whatsappLabel, whatsappHref, or, response, channels } =
+  Astro.props;
+---
+
+<section class="contact section section--gray" id="contacto">
+  <div class="frame">
+    <header class="section__head" data-reveal>
+      <span class="mono section__index">({index})</span>
+      <span class="mono">{label}</span>
+      <span class="mono contact__meta">{response}</span>
+    </header>
+
+    <div class="contact__body">
+      <h2 class="contact__statement serif" data-reveal>
+        {statementA}
+        <br />
+        <span class="italic contact__accent">{statementB}</span>
+      </h2>
+
+      <p class="contact__copy" data-reveal style="--reveal-delay:80ms">{body}</p>
+
+      <a
+        class="contact__cta"
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-reveal
+        style="--reveal-delay:140ms"
+      >
+        <span class="contact__cta-label">{whatsappLabel}</span>
+        <span class="contact__cta-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <div class="contact__channels" data-reveal style="--reveal-delay:180ms">
+      <p class="mono contact__or">{or}</p>
+      <ul class="contact__list">
+        {
+          channels.map((channel) => (
+            <li class="contact__item">
+              <a class="contact__link" href={channel.href} target="_blank" rel="noopener noreferrer">
+                <span class="mono contact__link-label">{channel.label}</span>
+                <span class="contact__link-handle">{channel.handle}</span>
+                <span class="mono contact__link-arrow" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__meta {
+    display: none;
+    color: var(--gray-2);
+  }
+
+  .contact {
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .contact__body {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .contact__statement {
+    font-size: clamp(2.6rem, 9vw, 7rem);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    font-weight: 400;
+  }
+
+  .contact__accent {
+    color: var(--bone-3);
+  }
+
+  .contact__copy {
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    max-width: 52ch;
+    color: var(--gray);
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    line-height: 1.7;
+  }
+
+  .contact__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+    padding: clamp(1rem, 2vw, 1.35rem) clamp(1.5rem, 3vw, 2.25rem);
+    border: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+    letter-spacing: -0.01em;
+    transition:
+      background 0.4s var(--ease),
+      color 0.4s var(--ease),
+      border-color 0.4s var(--ease);
+  }
+
+  .contact__cta-arrow {
+    color: var(--steel);
+    transition: transform 0.4s var(--ease), color 0.4s var(--ease);
+  }
+
+  .contact__cta:hover {
+    background: var(--bone);
+    color: var(--navy-900);
+    border-color: var(--bone);
+  }
+
+  .contact__cta:hover .contact__cta-arrow {
+    color: var(--navy-900);
+    transform: translate(3px, -3px);
+  }
+
+  .contact__channels {
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+  }
+
+  .contact__or {
+    color: var(--gray-2);
+    margin-bottom: 0.5rem;
+  }
+
+  .contact__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .contact__link {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 0.35rem 1rem;
+    padding: clamp(0.9rem, 1.6vw, 1.25rem) 0;
+    border-bottom: 1px solid var(--line-2);
+    transition: color 0.35s var(--ease);
+  }
+
+  .contact__link-label {
+    color: var(--gray-2);
+  }
+
+  .contact__link-handle {
+    grid-column: 1;
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.4vw, 1.7rem);
+    letter-spacing: -0.02em;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .contact__link-arrow {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+    color: var(--steel);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .contact__link:hover .contact__link-handle {
+    transform: translateX(0.5rem);
+  }
+
+  .contact__link:hover .contact__link-arrow {
+    transform: translate(3px, -3px);
+  }
+
+  @media (min-width: 720px) {
+    .contact__meta {
+      display: block;
+    }
+
+    .contact__list {
+      grid-template-columns: 1fr 1fr;
+      column-gap: clamp(2rem, 5vw, 4rem);
+    }
+  }
+
+  .section--gray {
+    background: var(--gray-2);
+    color: var(--bone);
+    border-top-color: rgba(239, 234, 224, 0.22);
+  }
+
+  .section--gray .section__head,
+  .section--gray .contact__meta,
+  .section--gray .contact__or {
+    color: var(--bone);
+  }
+
+  .section--gray .contact__accent {
+    color: var(--bone-2);
+  }
+
+  .section--gray .contact__copy {
+    color: var(--bone);
+  }
+
+  .section--gray .contact__cta {
+    border-color: rgba(239, 234, 224, 0.34);
+    color: var(--bone);
+  }
+
+  .section--gray .contact__cta:hover {
+    background: var(--bone);
+    color: var(--navy-900);
+    border-color: var(--bone);
+  }
+
+  .section--gray .contact__link {
+    border-bottom-color: rgba(239, 234, 224, 0.2);
+  }
+
+  .section--gray .contact__link-label {
+    color: var(--bone);
+  }
+
+  .section--gray .contact__link-handle {
+    color: var(--bone);
+  }
+
+  .section--gray .contact__link-arrow {
+    color: var(--bone);
+  }
+</style>

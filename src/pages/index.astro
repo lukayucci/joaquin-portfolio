@@ -1,0 +1,138 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Profile from '../components/Profile.astro';
+import Projects from '../components/Projects.astro';
+import Stack from '../components/Stack.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { useTranslations, localizePath } from '../i18n/utils';
+import { projects } from '../data/projects';
+import { stackGroups } from '../data/stack';
+import { socials, site } from '../data/site';
+import joaquin from '../assets/joaquin.jpg';
+
+const lang = 'es';
+const t = useTranslations(lang);
+
+const nav = [
+  { href: '#perfil', label: t('nav.profile') },
+  { href: '#proyectos', label: t('nav.work') },
+  { href: '#stack', label: t('nav.stack') },
+  { href: '#contacto', label: t('nav.contact') },
+];
+
+const channels = [
+  { label: socials.github.label, handle: socials.github.handle, href: socials.github.href },
+  { label: socials.instagram.label, handle: socials.instagram.handle, href: socials.instagram.href },
+  { label: socials.whatsapp.label, handle: socials.whatsapp.handle, href: socials.whatsapp.href },
+  { label: socials.agency.label, handle: socials.agency.handle, href: socials.agency.href },
+];
+
+const profileFacts = [
+  { label: 'Rol', value: t('hero.role') },
+  { label: 'Base', value: site.location },
+  { label: 'Foco', value: 'Full-stack · Producto' },
+  { label: 'GitHub', value: socials.github.handle },
+];
+
+const marquee = [
+  t('hero.marquee1'),
+  t('hero.marquee2'),
+  t('hero.marquee3'),
+  t('hero.marquee4'),
+  t('hero.marquee5'),
+  t('hero.marquee6'),
+];
+---
+
+<BaseLayout lang={lang} title={t('site.title')} description={t('site.description')}>
+  <div class="shell">
+    <Header
+      lang={lang}
+      homeHref={localizePath('es', '/')}
+      switchHref={localizePath('en', '/')}
+      switchLabel="EN"
+      nav={nav}
+      available={t('header.available')}
+      menuLabel={t('nav.menu')}
+      closeLabel={t('nav.close')}
+    />
+
+    <main id="main">
+      <Hero
+        eyebrow={t('hero.eyebrow')}
+        location={site.location}
+        coords={site.coords}
+        role={t('hero.role')}
+        tagline={t('hero.tagline')}
+        scroll={t('hero.scroll')}
+        marquee={marquee}
+      />
+
+      <Profile
+        index="01"
+        label={t('profile.label')}
+        meta={t('hero.asideTop')}
+        statementA={t('profile.statementA')}
+        statementB={t('profile.statementB')}
+        body={t('profile.body')}
+        listTitle={t('profile.listTitle')}
+        items={[
+          t('profile.item1'),
+          t('profile.item2'),
+          t('profile.item3'),
+          t('profile.item4'),
+          t('profile.item5'),
+        ]}
+        facts={profileFacts}
+        photo={{ src: joaquin, alt: t('profile.photoAlt'), caption: t('profile.photoCaption') }}
+      />
+
+      <Projects
+        lang={lang}
+        index="02"
+        label={t('work.label')}
+        casesLabel={t('work.cases')}
+        lead={t('work.lead')}
+        indexTitle={t('work.indexTitle')}
+        projects={projects}
+      />
+
+      <Stack
+        lang={lang}
+        index="03"
+        label={t('stack.label')}
+        meta={t('stack.meta')}
+        lead={t('stack.lead')}
+        note={t('stack.note')}
+        groups={stackGroups}
+      />
+
+      <Contact
+        index="04"
+        label={t('contact.label')}
+        statementA={t('contact.statementA')}
+        statementB={t('contact.statementB')}
+        body={t('contact.body')}
+        whatsappLabel={t('contact.whatsapp')}
+        whatsappHref={socials.whatsapp.href}
+        or={t('contact.or')}
+        response={t('contact.response')}
+        channels={channels}
+      />
+    </main>
+
+    <Footer
+      tagline={t('footer.tagline')}
+      indexLabel={t('footer.index')}
+      socialLabel={t('footer.social')}
+      topLabel={t('footer.top')}
+      made={t('footer.made')}
+      credit={t('footer.credit')}
+      nav={nav}
+      channels={channels}
+    />
+  </div>
+</BaseLayout>

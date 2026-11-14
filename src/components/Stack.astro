@@ -1,0 +1,184 @@
+---
+import type { StackGroup } from '../data/stack';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  index: string;
+  label: string;
+  meta: string;
+  lead: string;
+  note: string;
+  groups: StackGroup[];
+}
+
+const { lang, index, label, meta, lead, note, groups } = Astro.props;
+---
+
+<section class="stack section section--bone" id="stack">
+  <div class="frame">
+    <header class="section__head" data-reveal>
+      <span class="mono section__index">({index})</span>
+      <span class="mono">{label}</span>
+      <span class="mono stack__meta">{meta}</span>
+    </header>
+
+    <p class="stack__lead serif" data-reveal>{lead}</p>
+
+    <div class="stack__grid">
+      {
+        groups.map((group, i) => (
+          <article class="stack__group" data-reveal style={`--reveal-delay:${i * 70}ms`}>
+            <div class="stack__group-head">
+              <span class="mono stack__group-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="stack__group-title serif">{group.title[lang]}</h3>
+            </div>
+            <p class="stack__group-note">{group.note[lang]}</p>
+            <ul class="stack__items">
+              {group.items.map((item) => (
+                <li class="mono stack__item">{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="stack__note" data-reveal>{note}</p>
+  </div>
+</section>
+
+<style>
+  .stack__meta {
+    color: var(--gray-2);
+  }
+
+  .stack__lead {
+    max-width: 24ch;
+    padding-block: clamp(2rem, 5vw, 3.5rem) clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(1.8rem, 4.2vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-weight: 400;
+  }
+
+  .stack__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .stack__group {
+    background: var(--navy-900);
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .stack__group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line-2);
+  }
+
+  .stack__group-num {
+    color: var(--steel);
+  }
+
+  .stack__group-title {
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .stack__group-note {
+    margin-top: 1rem;
+    color: var(--gray);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    max-width: 42ch;
+  }
+
+  .stack__items {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+  }
+
+  .stack__item {
+    border: 1px solid var(--line);
+    padding: 0.34rem 0.62rem;
+    color: var(--bone-2);
+    transition: border-color 0.35s var(--ease), color 0.35s var(--ease);
+  }
+
+  .stack__group:hover .stack__item {
+    border-color: rgba(239, 234, 224, 0.28);
+    color: var(--bone);
+  }
+
+  .stack__note {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    max-width: 60ch;
+    color: var(--gray-2);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  @media (min-width: 780px) {
+    .stack__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .section--bone {
+    background: var(--bone);
+    color: var(--navy-900);
+    border-top-color: rgba(7, 17, 29, 0.16);
+  }
+
+  .section--bone .section__head {
+    color: var(--gray-2);
+  }
+
+  .section--bone .stack__meta,
+  .section--bone .stack__group-num {
+    color: var(--gray-2);
+  }
+
+  .section--bone .stack__grid {
+    background: rgba(7, 17, 29, 0.16);
+    border-color: rgba(7, 17, 29, 0.16);
+  }
+
+  .section--bone .stack__group {
+    background: var(--bone);
+  }
+
+  .section--bone .stack__group-head {
+    border-bottom-color: rgba(7, 17, 29, 0.14);
+  }
+
+  .section--bone .stack__group-note {
+    color: var(--gray-2);
+  }
+
+  .section--bone .stack__item {
+    border-color: rgba(7, 17, 29, 0.22);
+    color: var(--navy-800);
+  }
+
+  .section--bone .stack__group:hover .stack__item {
+    border-color: var(--navy-900);
+    color: var(--navy-900);
+  }
+
+  .section--bone .stack__note {
+    color: var(--gray-2);
+  }
+</style>
