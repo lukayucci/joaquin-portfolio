@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lukayucci.github.io/joaquin-portfolio/sitemap-index.xml
