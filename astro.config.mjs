@@ -1,9 +1,10 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// NOTE: when publishing under a repo path on GitHub Pages, set `base: '/<repo>'`.
+// Publicado en GitHub Pages como project page: https://lukayucci.github.io/joaquin-portfolio/
 export default defineConfig({
-  site: 'https://pxp2p.github.io',
+  site: 'https://lukayucci.github.io',
+  base: '/joaquin-portfolio',
   trailingSlash: 'ignore',
   integrations: [sitemap()],
   i18n: {
